@@ -12,9 +12,10 @@ struct EmojiMemoryGameView: View {
     @ObservedObject var viewModel: EmojiMemoryGame
     var body: some View {
         Grid(viewModel.cards){ card in
-                CardView(card: card)
-                    .aspectRatio(2/3, contentMode: .fit)
-                    .onTapGesture {self.viewModel.choose(card: card)}
+            CardView(card: card)
+                .onTapGesture {self.viewModel.choose(card: card)}
+                .padding(5)
+//            .aspectRatio(2/3, contentMode: .fit) MARK:Why?
         }
             .padding()
             .foregroundColor(Color.orange)
@@ -46,6 +47,7 @@ struct CardView: View{
     }
     
     // MARK: - Drawing Constants
+
     let cornerRaious: CGFloat = 10.0
     let edgeLineWidth: CGFloat = 3.0
     func fontSize(for size: CGSize) -> CGFloat{

@@ -12,12 +12,13 @@ import SwiftUI
 class EmojiMemoryGame: ObservableObject{
     @Published private var model: MemoryGame<String> = EmojiMemoryGame.createMemoryGame()
     
-    //MARK: played with closure. Was: pairIndex in return emojis[pairIndex]
+    //MARK: played with closure. Was: emojis[$0]
     static func createMemoryGame() -> MemoryGame<String>{
         let emojis = ["👻", "🎃", "👽","👹","💩"]
-        return MemoryGame<String>(numberOfPairsOfCards: Int.random(in: 2...5))
-        { emojis[$0]
-        }
+//         Int.random(in: 2...5)
+        return MemoryGame<String>(numberOfPairsOfCards:3)
+        { pairIndex in
+            return emojis[pairIndex]}
     }
     //MARK: - Access to the Model
     
@@ -30,7 +31,6 @@ class EmojiMemoryGame: ObservableObject{
         model.choose(card: card)
     }
 }
-
 
 struct EmojiMemoryGame_Previews: PreviewProvider {
     static var previews: some View {

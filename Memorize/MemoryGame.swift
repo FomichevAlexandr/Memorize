@@ -9,22 +9,20 @@
 import Foundation
 
 struct MemoryGame<CardContent>{
+    
+    struct Card: Identifiable{
+        var isFaceUp: Bool = true
+        var isMatched: Bool = false
+        var content: CardContent
+        var id: Int
+    }
+    
     var cards: Array<Card>
     
     mutating func choose(card: Card){
         print("card chosen:  \(card)")
-        if let chosenIndex = self.index(of: card){
-            cards[chosenIndex].isFaceUp = !cards[chosenIndex].isFaceUp
-        }
-    }
-    
-    func index(of card: Card) -> Int?{
-        for index in 0..<cards.count{
-            if cards[index].id == card.id{
-                return index
-            }
-        }
-        return nil //TODO: Not bogus :)
+        let chosenIndex = cards.firstIndex(matching: card)
+        cards[chosenIndex].isFaceUp = !cards[chosenIndex].isFaceUp
     }
     
     //MARK: cardContentFactory is function, that receive Int and return CardContent.
@@ -38,15 +36,9 @@ struct MemoryGame<CardContent>{
         cards.shuffle()
     }
     
-    struct Card: Identifiable{
-        var isFaceUp: Bool = true
-        var isMatched: Bool = false
-        var content: CardContent
-        var id: Int
-    }
+
 }
 
-//let names = ["Chris", "Alex", "Ewa", "Barry", "Daniella"]
-//var reversedNames = names.sorted(by: { (s1: String, s2: String) -> Bool in return s1 > s2 })
+
 
 
