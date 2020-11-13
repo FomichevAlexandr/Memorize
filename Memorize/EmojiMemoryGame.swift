@@ -14,9 +14,9 @@ class EmojiMemoryGame: ObservableObject{
     
     //MARK: played with closure. Was: emojis[$0]
     static func createMemoryGame() -> MemoryGame<String>{
-        let emojis = ["👻", "🎃", "👽","👹","💩"]
+        let emojis = ["👻", "🎃", "👽","👹","💩","🤠","😻","🤩","🤑","😡","💀","😤","😎"]
 //         Int.random(in: 2...5)
-        return MemoryGame<String>(numberOfPairsOfCards:3)
+        return MemoryGame<String>(numberOfPairsOfCards: Int.random(in: 2...5) )
         { pairIndex in
             return emojis[pairIndex]}
     }

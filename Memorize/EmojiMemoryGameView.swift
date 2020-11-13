@@ -40,7 +40,9 @@ struct CardView: View{
             Text(card.content)
             }
             else{
-                RoundedRectangle(cornerRadius: cornerRaious).fill()
+                if !card.isMatched{
+                    RoundedRectangle(cornerRadius: cornerRaious).fill()
+                }
             }
         }
         .font(Font.system(size: fontSize(for: size)))
