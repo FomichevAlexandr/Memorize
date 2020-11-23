@@ -10,18 +10,34 @@ import SwiftUI
 
 struct EmojiMemoryGameView: View {
     @ObservedObject var viewModel: EmojiMemoryGame
+    @State var  hasGameStarted:Bool = false
     var body: some View {
-        Grid(viewModel.cards){ card in
-            CardView(card: card)
-                .onTapGesture {self.viewModel.choose(card: card)}
-                .padding(5)
-//            .aspectRatio(2/3, contentMode: .fit) MARK:Why?
+        if !hasGameStarted{ Button(action: {
+//             EmojiMemoryGame.setTheme(numberOfTheme: Int.random(in: 0..<EmojiMemoryGame.theme.numberOfTheme))
+//            EmojiMemoryGame.setTheme(numberOfTheme:5)
+            hasGameStarted = true
+        }, label: {
+            Text("START GAME").font(Font.largeTitle.italic()).foregroundColor(Color.black)
+        })}
+        else{
+            VStack{
+                Text(EmojiMemoryGame.theme.name)
+                    .font(Font.largeTitle)
+                    .foregroundColor(EmojiMemoryGame.theme.color)
+            
+                Grid(viewModel.cards){ card in
+                    CardView(card: card)
+                        .onTapGesture {self.viewModel.choose(card: card)}
+                        .padding(4)
+                }
+                    .padding()
+                .foregroundColor(EmojiMemoryGame.theme.color)
+            }
         }
-            .padding()
-            .foregroundColor(Color.orange)
     }
-    
+  
 }
+
 
 
 struct CardView: View{
@@ -60,6 +76,7 @@ struct CardView: View{
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
+
         EmojiMemoryGameView(viewModel: EmojiMemoryGame())
     }
 }

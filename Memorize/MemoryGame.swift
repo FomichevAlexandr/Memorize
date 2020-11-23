@@ -16,7 +16,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable{
         var content: CardContent
         var id: Int
     }
-    
+
     var cards: Array<Card>
     
     var indexOfOneAndOnlyFaceUpCard:Int?{
