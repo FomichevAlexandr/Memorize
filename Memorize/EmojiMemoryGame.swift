@@ -19,7 +19,6 @@ import SwiftUI
 
 class EmojiMemoryGame: ObservableObject{
     
-    
     @Published private var model: MemoryGame<String> = EmojiMemoryGame.createMemoryGame()
     
     private static let themes = [("Hallowen",["👻", "🎃", "👽","👹","💀"], Color.orange),
@@ -29,9 +28,8 @@ class EmojiMemoryGame: ObservableObject{
                  ("Animals",["🐱","🐰","🐻","🐼","🐨"],Color.green),
                  ("Cars",["🚗","🚕","🏎", "🚓", "🛵"],Color.red)]
     
-    
-    //MARK: played with closure. Was: emojis[$0]
-    static func createMemoryGame() -> MemoryGame<String>{
+    //MARK: Can: emojiSet[$0]
+    private static func createMemoryGame() -> MemoryGame<String>{
         setTheme(numberOfTheme: Int.random(in: 0...themes.count-1))
         return MemoryGame<String>(numberOfPairsOfCards: theme.numberOfCard)
         { pairIndex in
@@ -50,12 +48,15 @@ class EmojiMemoryGame: ObservableObject{
         let emojiSet: [String]
         var numberOfCard: Int{
             get{
-                Int.random(in: 3...emojiSet.count)
+                Int.random(in: 2...emojiSet.count)
             }
         }
         let color: Color
     }
     
+    var score: Int{
+        model.score
+    }
     //MARK: - Access to the Model
     
     var cards: Array<MemoryGame<String>.Card>{
