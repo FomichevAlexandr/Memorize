@@ -10,13 +10,13 @@ import SwiftUI
 
 struct EmojiMemoryGameView: View {
     @ObservedObject var viewModel: EmojiMemoryGame
-    @State var  hasGameStarted:Bool = false
+    @State var  hasGameStarted: Bool = false
     var body: some View {
-        if !hasGameStarted{ Button(action: {
-            hasGameStarted = true
-        }, label: {
-            Text("START GAME").font(Font.largeTitle).foregroundColor(Color.black)
-        })}
+        if !hasGameStarted {
+            Button(action: {
+                hasGameStarted = true
+            }, label: {Text("START GAME").font(Font.largeTitle).foregroundColor(Color.black)})
+        }
         else{
             VStack{
                 HStack{
@@ -27,11 +27,20 @@ struct EmojiMemoryGameView: View {
                 }
                 Grid(viewModel.cards){ card in
                     CardView(card: card)
-                        .onTapGesture {self.viewModel.choose(card: card)}
+                        .onTapGesture {
+                            withAnimation(Animation.linear(duration: 0.75)){
+                                self.viewModel.choose(card: card)
+                            }
+                        }
                         .padding(4)
                 }
-                    .padding()
+                .padding()
                 .foregroundColor(EmojiMemoryGame.theme.color)
+                Button(action: {
+                    withAnimation(.easeInOut){
+                        self.viewModel.resetGame()
+                    }
+                },label: {Text("NEW GAME").foregroundColor(Color.black)})
             }
         }
     }
@@ -45,24 +54,51 @@ struct CardView: View{
         }
     }
     
+    @State var animatedBonusRamaining : Double = 0
+    
+    private func startBonusTimeAnimation (){
+        animatedBonusRamaining = card.bonusRemaining
+        withAnimation(.linear(duration: card.bonusTimeRemaining)){
+            animatedBonusRamaining = 0
+        }
+    }
     @ViewBuilder
     private func body(for size: CGSize) -> some View{
-        if (!card.isMatched || card.isFaceUp){
+        if  card.isFaceUp || !card.isMatched  {
             ZStack{
-                Pie(startAngle: Angle.degrees(-90), endAngle: Angle.degrees(100)).padding(5).opacity(0.4)
-                Text(card.content).font(Font.system(size: fontSize(for: size)))
-            }.cardify(isfaceUp: card.isFaceUp)
+                Group{
+                    if card.isConsumingBonusTime{
+                        Pie(startAngle: Angle.degrees(-90), endAngle: Angle.degrees(-animatedBonusRamaining * 360 - 90 ),clockwise: true)
+                            .onAppear{
+                                startBonusTimeAnimation()
+                            }
+                    }
+                    else {
+                        Pie(startAngle: Angle.degrees(-90), endAngle: Angle.degrees(-card.bonusRemaining*360-90 ),clockwise: true)
+                    }
+                }
+                .padding(5)
+                .opacity(0.4)
+                Text(card.content)
+                    .font(Font.system(size: fontSize(for: size)))
+                    .rotationEffect(Angle.degrees(card.isMatched ? 360 : 0))
+                    .animation(card.isMatched ? Animation.linear(duration: 1).repeatForever(autoreverses: false) : .default)
+            }
+            .cardify(isfaceUp: card.isFaceUp)
+            .transition(AnyTransition.scale)
+            
+            
         }
     }
     
-   private func fontSize(for size: CGSize) -> CGFloat{
+    private func fontSize(for size: CGSize) -> CGFloat{
         min(size.width, size.height)*0.7
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-
+        
         EmojiMemoryGameView(viewModel: EmojiMemoryGame())
     }
 }
